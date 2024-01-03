@@ -71,7 +71,7 @@ func SaveRequest(req Response) {
 	// List of prohibited substrings in lowercase
 	prohibitedSubstrings := []string{
 		"curl", "telegram", "python", "go", "java", "php", "node",
-		"wget", "ruby", "perl", "c++", "c#", "c/", "c ", "dart", "swift", "kotlin", "rust",
+		"wget", "ruby", "perl", "c++", "swift", "kotlin", "rust",
 	}
 
 	// Check if lowerUserAgent contains any prohibited substring
@@ -79,7 +79,7 @@ func SaveRequest(req Response) {
 		if strings.Contains(lowerUserAgent, "okhttp") {
 			break
 		}
-		if strings.Contains(lowerUserAgent, substring) {
+		if lowerUserAgent == "" || strings.Contains(lowerUserAgent, substring) {
 			return
 		}
 	}
@@ -90,6 +90,8 @@ func SaveRequest(req Response) {
 	if err != nil {
 		log.Println(err)
 	}
+
+	log.Printf("Saved request %s\n", userAgent)
 }
 
 func GetTotalRequestCount() int64 {
