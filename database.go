@@ -16,6 +16,7 @@ type RequestLog struct {
 	H2        string `bson:"h2"`
 	PeetPrint string `bson:"peetprint"`
 	IP        string `bson:"ip"`
+	JsonAll   string `bson:"json_all"`
 	Time      int64
 }
 
@@ -65,6 +66,7 @@ func SaveRequest(req Response) {
 		reqLog.IP = ip
 	}
 	reqLog.UserAgent = GetUserAgent(req)
+	reqLog.JsonAll = req.ToJson()
 
 	_, err := collection.InsertOne(ctx, reqLog)
 	if err != nil {

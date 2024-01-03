@@ -108,15 +108,7 @@ func index(r Response, v url.Values) ([]byte, string) {
 
 func getAllPaths() map[string]func(Response, url.Values) ([]byte, string) {
 	return map[string]func(Response, url.Values) ([]byte, string){
-		"/":                     index,
-		"/explore":              staticFile("static/explore.html"),
-		"/api/all":              apiAll,
-		"/api/tls":              apiTLS,
-		"/api/clean":            apiClean,
-		"/api/request-count":    apiRequestCount,
-		"/api/search-ja3":       apiSearchJA3,
-		"/api/search-h2":        apiSearchH2,
-		"/api/search-peetprint": apiSearchPeetPrint,
-		"/api/search-useragent": apiSearchUserAgent,
+		"/":        apiAll,
+		"/api/all": apiAll,
 	}
 }
