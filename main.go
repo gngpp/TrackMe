@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"net"
 	"net/http"
@@ -47,6 +48,19 @@ func init() {
 	}
 	fmt.Println(c.DB, c.Collection)
 	collection = client.Database(c.DB).Collection(c.Collection)
+
+	collection.Distinct(ctx, "userAgent", bson.D{})
+
+	// Create index
+	index := mongo.IndexModel{
+		Keys:    bson.D{{Key: "userAgent"}},
+		Options: options.Index().SetUnique(true),
+	}
+
+	_, err = collection.Indexes().CreateOne(context.Background(), index)
+	if err != nil {
+		log.Fatal(err)
+	}
 	connectedToDB = true
 
 }
