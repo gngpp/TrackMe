@@ -85,8 +85,12 @@ func SaveRequest(req Response) {
 	}
 	reqLog.UserAgent = userAgent
 	reqLog.JsonAll = req.ToJson()
-
-	_, err := collection.InsertOne(ctx, reqLog)
+	// distinct and insert
+	_, err := collection.Distinct(ctx, "user_agent", "")
+	if err != nil {
+		log.Println(err)
+	}
+	_, err = collection.InsertOne(ctx, reqLog)
 	if err != nil {
 		log.Println(err)
 	}
