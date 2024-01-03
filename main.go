@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"net"
 	"net/http"
@@ -49,6 +50,17 @@ func init() {
 	collection = client.Database(c.DB).Collection(c.Collection)
 	connectedToDB = true
 
+	indexOptions := options.Index().SetUnique(true)
+	indexModel := mongo.IndexModel{
+		Keys:    bson.D{{Key: "user_agent", Value: 1}},
+		Options: indexOptions,
+	}
+
+	_, err = collection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Unique index on UserAgent created successfully!")
 }
 
 func redirect(w http.ResponseWriter, r *http.Request) {
