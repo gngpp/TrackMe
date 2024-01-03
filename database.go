@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/url"
 	"strings"
@@ -87,61 +86,12 @@ func SaveRequest(req Response) {
 	reqLog.UserAgent = userAgent
 	reqLog.JsonAll = req.ToJson()
 
-	// 使用聚合管道去重
-	pipeline := mongo.Pipeline{
-		{{"$group", bson.D{
-			{"_id", "$user_agent"},
-			{"uniqueId", bson.D{{"$first", "$_id"}}},
-			{"userAgent", bson.D{{"$first", "$user_agent"}}},
-			{"JA3", bson.D{{"$first", "$JA3"}}},
-			{"H2", bson.D{{"$first", "$H2"}}},
-			{"PeetPrint", bson.D{{"$first", "$PeetPrint"}}},
-			{"IP", bson.D{{"$first", "$IP"}}},
-			{"JsonAll", bson.D{{"$first", "$json_all"}}},
-			{"Time", bson.D{{"$first", "$Time"}}},
-		}}},
-		{{"$match", bson.D{
-			{"userAgent", userAgent}, // 匹配给定的 userAgent
-		}}},
-	}
-
-	cursor, err := collection.Aggregate(ctx, pipeline)
+	_, err = collection.InsertOne(ctx, reqLog)
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer cursor.Close(ctx)
-
-	var existingRecords []RequestLog
-
-	if err := cursor.All(ctx, &existingRecords); err != nil {
-		log.Fatal(err)
-	}
-
-	if len(existingRecords) > 0 {
-		// 如果已存在相同 userAgent 的记录，不进行插入
-		fmt.Println("Record already exists for UserAgent:", existingRecords[0].UserAgent)
+		log.Printf("Already exists: %s\n", userAgent)
 	} else {
-		// 如果不存在相同 userAgent 的记录，进行插入
-		reqLog := RequestLog{
-			UserAgent: userAgent,
-			JA3:       "your_ja3_data",       // 设置你的 JA3 数据
-			H2:        "your_h2_data",        // 设置你的 H2 数据
-			PeetPrint: "your_peetprint_data", // 设置你的 PeetPrint 数据
-			IP:        "your_ip_data",        // 设置你的 IP 数据
-			JsonAll:   "your_json_data",      // 设置你的 JSON 数据
-			Time:      1234567890,            // 设置时间戳
-		}
-
-		// 插入新记录
-		_, err = collection.InsertOne(ctx, reqLog)
-		if err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Record inserted successfully!")
-		}
+		fmt.Println("Record inserted successfully!")
 	}
-
-	log.Printf("Saved request %s\n", userAgent)
 }
 
 func GetTotalRequestCount() int64 {
