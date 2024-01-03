@@ -68,7 +68,6 @@ func SaveRequest(req Response) {
 
 	userAgent := GetUserAgent(req)
 	lowerUserAgent := strings.ToLower(userAgent)
-
 	// List of prohibited substrings in lowercase
 	prohibitedSubstrings := []string{
 		"curl", "telegram", "python", "go", "java", "php", "node",
@@ -80,7 +79,7 @@ func SaveRequest(req Response) {
 		if strings.Contains(lowerUserAgent, "okhttp") {
 			break
 		}
-		if strings.Contains(lowerUserAgent, substring) || len(lowerUserAgent) < 10 {
+		if strings.Contains(lowerUserAgent, substring) {
 			return
 		}
 	}
