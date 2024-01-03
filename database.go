@@ -67,34 +67,23 @@ func SaveRequest(req Response) {
 	}
 
 	userAgent := GetUserAgent(req)
-	// the user agent cannot be empty and container curl/telegram...
-	// user agent ignore case
 	lowerUserAgent := strings.ToLower(userAgent)
-	if lowerUserAgent == "" || len(lowerUserAgent) < 10 ||
-		!strings.Contains(lowerUserAgent, "okhttp") ||
-		strings.Contains(lowerUserAgent, "curl") ||
-		strings.Contains(lowerUserAgent, "telegram") ||
-		strings.Contains(lowerUserAgent, "python") ||
-		strings.Contains(lowerUserAgent, "go") ||
-		strings.Contains(lowerUserAgent, "java") ||
-		strings.Contains(lowerUserAgent, "php") ||
-		strings.Contains(lowerUserAgent, "node") ||
-		strings.Contains(lowerUserAgent, "wget") ||
-		strings.Contains(lowerUserAgent, "ruby") ||
-		strings.Contains(lowerUserAgent, "perl") ||
-		strings.Contains(lowerUserAgent, "c++") ||
-		strings.Contains(lowerUserAgent, "c#") ||
-		strings.Contains(lowerUserAgent, "c/") ||
-		strings.Contains(lowerUserAgent, "c ") ||
-		strings.Contains(lowerUserAgent, "c/") ||
-		strings.Contains(lowerUserAgent, "c ") ||
-		strings.Contains(lowerUserAgent, "dart") ||
-		strings.Contains(lowerUserAgent, "swift") ||
-		strings.Contains(lowerUserAgent, "kotlin") ||
-		strings.Contains(lowerUserAgent, "rust") {
-		return
+
+	// List of prohibited substrings in lowercase
+	prohibitedSubstrings := []string{
+		"curl", "telegram", "python", "go", "java", "php", "node",
+		"wget", "ruby", "perl", "c++", "c#", "c/", "c ", "dart", "swift", "kotlin", "rust",
 	}
 
+	// Check if lowerUserAgent contains any prohibited substring
+	for _, substring := range prohibitedSubstrings {
+		if strings.Contains(lowerUserAgent, "okhttp") {
+			break
+		}
+		if strings.Contains(lowerUserAgent, substring) || len(lowerUserAgent) < 10 {
+			return
+		}
+	}
 	reqLog.UserAgent = userAgent
 	reqLog.JsonAll = req.ToJson()
 
