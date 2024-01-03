@@ -65,7 +65,35 @@ func SaveRequest(req Response) {
 		ip := strings.Join(parts[0:len(parts)-1], ":")
 		reqLog.IP = ip
 	}
-	reqLog.UserAgent = GetUserAgent(req)
+
+	userAgent := GetUserAgent(req)
+	// the user agent cannot be empty and container curl/telegram...
+	// user agent ignore case
+	lowerUserAgent := strings.ToLower(userAgent)
+	if lowerUserAgent == "" || strings.Contains(lowerUserAgent, "curl") ||
+		strings.Contains(lowerUserAgent, "telegram") ||
+		strings.Contains(lowerUserAgent, "python") ||
+		strings.Contains(lowerUserAgent, "go") ||
+		strings.Contains(lowerUserAgent, "java") ||
+		strings.Contains(lowerUserAgent, "php") ||
+		strings.Contains(lowerUserAgent, "node") ||
+		strings.Contains(lowerUserAgent, "wget") ||
+		strings.Contains(lowerUserAgent, "ruby") ||
+		strings.Contains(lowerUserAgent, "perl") ||
+		strings.Contains(lowerUserAgent, "c++") ||
+		strings.Contains(lowerUserAgent, "c#") ||
+		strings.Contains(lowerUserAgent, "c/") ||
+		strings.Contains(lowerUserAgent, "c ") ||
+		strings.Contains(lowerUserAgent, "c/") ||
+		strings.Contains(lowerUserAgent, "c ") ||
+		strings.Contains(lowerUserAgent, "dart") ||
+		strings.Contains(lowerUserAgent, "swift") ||
+		strings.Contains(lowerUserAgent, "kotlin") ||
+		strings.Contains(lowerUserAgent, "rust") {
+		return
+	}
+
+	reqLog.UserAgent = userAgent
 	reqLog.JsonAll = req.ToJson()
 
 	_, err := collection.InsertOne(ctx, reqLog)
