@@ -70,7 +70,9 @@ func SaveRequest(req Response) {
 	// the user agent cannot be empty and container curl/telegram...
 	// user agent ignore case
 	lowerUserAgent := strings.ToLower(userAgent)
-	if lowerUserAgent == "" || strings.Contains(lowerUserAgent, "curl") ||
+	if lowerUserAgent == "" || len(lowerUserAgent) < 10 ||
+		!strings.Contains(lowerUserAgent, "okhttp") ||
+		strings.Contains(lowerUserAgent, "curl") ||
 		strings.Contains(lowerUserAgent, "telegram") ||
 		strings.Contains(lowerUserAgent, "python") ||
 		strings.Contains(lowerUserAgent, "go") ||
