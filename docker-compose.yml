@@ -4,9 +4,6 @@ services:
   track-me:
     image: ghcr.io/gngpp/track-me:latest
     container_name: track-me
-    build:
-      context: .
-      dockerfile: Dockerfile
     volumes:
       - ${PWD}/certs/:/app/certs
       - ${PWD}/config.json:/app/config.json
