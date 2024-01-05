@@ -1,8 +1,9 @@
 version: "2.2"
 
 services:
-  peet-tls:
-    image: peet-tls
+  track-me:
+    image: ghcr.io/gngpp/track-me:latest
+    container_name: track-me
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,6 +11,20 @@ services:
       - ${PWD}/certs/:/app/certs
       - ${PWD}/config.json:/app/config.json
       - ${PWD}/blockedIPs:/app/blockedIPs
+    depends_on:
+      - mongo
     ports:
       - "443:443"
       - "80:80"
+    
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - ${PWD}/mongo:/data/db
+    ports:
+      - "27017:27017"

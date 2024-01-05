@@ -1,11 +1,11 @@
 {
-  "log_to_db": false,
+  "log_to_db": true,
   "tls_port": "443",
   "http_port": "80",
   "cert_file": "certs/chain.pem",
   "key_file": "certs/key.pem",
   "host": "0.0.0.0",
-  "mongoURL": "",
+  "mongoURL": "mongodb://admin:admin@mongo:27017",
   "mongo_database": "TrackMe",
   "mongo_collection": "requests",
   "mongo_log_ips": false
