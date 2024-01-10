@@ -306,6 +306,9 @@ func handleHTTP2(conn net.Conn, tlsFingerprint TLSDetails) {
 	encoder.WriteField(hpack.HeaderField{Name: "content-length", Value: strconv.Itoa(len(res))})
 	encoder.WriteField(hpack.HeaderField{Name: "content-type", Value: ctype})
 
+	// cors
+	encoder.WriteField(hpack.HeaderField{Name: "access-control-allow-origin", Value: "*"})
+
 	// Write HEADERS frame
 	err = fr.WriteHeaders(http2.HeadersFrameParam{StreamID: headerFrame.Stream, BlockFragment: hbuf.Bytes(), EndHeaders: true})
 	if err != nil {
