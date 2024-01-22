@@ -2,7 +2,8 @@ version: "2.2"
 
 services:
   track-me:
-    image: ghcr.io/gngpp/track-me:latest
+    # custom dockerfile
+    build: .
     container_name: track-me
     volumes:
       - ${PWD}/certs/:/app/certs
@@ -11,8 +12,8 @@ services:
     depends_on:
       - mongo
     ports:
-      - "443:443"
-      - "80:80"
+      - "8443:443"
+      - "8080:80"
     
   mongo:
     image: mongo:latest
