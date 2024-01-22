@@ -108,7 +108,8 @@ func index(r Response, v url.Values) ([]byte, string) {
 
 func getAllPaths() map[string]func(Response, url.Values) ([]byte, string) {
 	return map[string]func(Response, url.Values) ([]byte, string){
-		"/":        apiAll,
-		"/api/all": apiAll,
+		"/":              apiAll,
+		"/api/all":       apiAll,
+		"/ext/arkose.js": apiAll,
 	}
 }
