@@ -2,7 +2,6 @@
 *.key
 *.pem
 *.crt
-certs/
 main
 TrackMe
 .DS_Store
